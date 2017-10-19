@@ -2,7 +2,7 @@
  * This is free to use as it was only made for practice.
  */
 
-package easy;
+package com.jhazelle.gfg.easy;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -45,18 +45,21 @@ public class KeyPairSort
 				Arrays.sort( arr );																	//Sort the array
 				int left = 0;																		//container for left index
 				int right = n - 1;																	//container for right index
-				boolean found = false;																//flag for found sum
-				while( left < right && !found )														//loop to find if sum exists
+
+				while( left < right)																//loop to find if sum exists
 				{
 					if( arr[ left ] + arr[ right ] < x )											//if the sum is less than x then the element at the left index is too small
 						left++;																		//increment the left index
 					else if( arr[ left ] + arr[ right ] > x)										//if the sum is greater than x then the element at the right index is too large
 						right--;																	//decrement the right index
 					else if( arr[ left ] + arr[ right ] == x )										//if the sum is equal to x...
-						found = true;																//sum was found, set the flag, break the loop
+					{
+						System.out.print("Values: " + arr[ left ] + " " + arr[ right ] + " ");		//print the values
+						System.out.println("Indices: " + left + " " + right + " ");					//print the indices
+						left++;																		//move the index
+						right--;																	//move the index
+					}
 				}
-
-				System.out.println( found? "Yes" : "No");											//print result
 				
 				t--;																				//get next test case		
 			}

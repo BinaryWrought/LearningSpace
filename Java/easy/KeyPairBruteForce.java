@@ -2,7 +2,7 @@
  * This is free to use as it was only made for practice.
  */
 
-package easy;
+package com.jhazelle.gfg.easy;
 
 import java.util.Scanner;
 
