@@ -2,8 +2,6 @@
  * This is free to use as it was only made for practice.
  */
 
-
-
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -50,8 +48,6 @@ public class KeyPairHashRedux
 					int temp = x - e;                                                               //find the difference between the sought after sum and this element
 					if( map.containsKey( temp ) )													//if the map has the difference and its not this element
 					{
-//						System.out.print("Values: " + e + " " + temp + " ");                        //print the values of the matching elements
-//						System.out.println("Indices: " + i + " " + map.get( temp ) );				//print the indices of the matching elements
                         found = true;
 					}
 					map.put( e, i );                                                                //put the value in the map

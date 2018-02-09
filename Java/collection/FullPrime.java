@@ -2,8 +2,6 @@
  * This is free to use as it was only made for practice.
  */
 
-
-
 import java.util.Scanner;
 
 /**
