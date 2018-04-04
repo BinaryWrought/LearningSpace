@@ -1,0 +1,26 @@
+ <!DOCTYPE html PUBLIC “-//W3C//DTD XHTML 1.0
+ Transitional//EN” “http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd”>
+ <html xmlns=”http://www.w3.org/1999/xhtml”>
+	<body bgcolor="white">
+		<p id="P1">Paragraph 1</P>
+		<p id="P2">Paragraph 2</P>
+		<script type = "text/javascript">
+		
+			document.bgColor = "lightBLUE";									//even though the bgColor was set to white above, this will change it to lightblue
+			document.getElementById('P2').innerHTML = "Hello P2";			//get paragraph 2 (identified as P2) and change its content to "Hello P2"
+				
+			for( var i = 0; i < 10; ++i )									//demonstrate a for loop in JavaScript
+			{
+				document.write("Count: " + i + "<br >");					//print the current count on its own line (that's what the br tag is for)
+			}
+			
+			document.write("Pets: ");										//print "Pets: " at the current cursor location (below the last count)
+			var pets = { 1 : "Dog", 2 : "Cat", 3 : "Fish", 4 : "Bird" };	//a map of pets (note the syntax is key : value and "key" can be string or number)
+			for( itr in pets )												//a for-in loop
+			{
+				document.write(pets[itr] + "\n");							//write a pet from the list of pets with a space between them (the \n only adds a space not a new line)
+			}
+			
+		</script>													
+	</body>
+</html>
