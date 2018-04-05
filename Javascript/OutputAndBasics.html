@@ -1,0 +1,20 @@
+ <!DOCTYPE html PUBLIC “-//W3C//DTD XHTML 1.0
+ Transitional//EN” “http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd”>
+ <html xmlns=”http://www.w3.org/1999/xhtml”>
+	<body bgcolor="white">
+		<p id="P1">Paragraph 1</P>
+		<script type = "text/javascript">
+			document.getElementById('P1').innerHTML = "Using innerHTML";	//get paragraph 2 (identified as P2) and change its content		
+			document.write("Using write before page load.<br >");				//print the string at the current cursor location
+			window.alert("Using alert!");									//print a window alert
+			console.log("Using console log.");								//print to the console	
+
+			var s = "5";
+			var i = 5;
+			document.write("s and i are same value and type? ");
+			document.write( (s === i) ? "Yes<br >" : "No<br >" );
+			document.write("s and i are NOT same value OR type? ");
+			document.write( (s !== i) ? "Yes<br >" : "No<br >" );
+		</script>													
+	</body>
+</html>
