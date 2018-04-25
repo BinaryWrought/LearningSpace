@@ -2,20 +2,16 @@
  * This is free to use as it was only made for practice.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
- * This class contains several methods for getting the factors of a given integer.
+ * This class contains several methods that implement commonly requested mathematical operations.
  * 
  * @author <a href="mailto:jhazelle@asu.edu">Justin Hazelle</a>
  * <a href="https://github.com/BinaryWrought" target="_blank">GitHub</a>
  */
-public class Factorization 
-{
-    
+public class MathFunctions 
+{    
     /**
      * This method will return all of the factors of a given integer in an array list
      * @param n the integer to factor
@@ -63,48 +59,51 @@ public class Factorization
     }
     
     /**
-     * @param args the command line arguments
+     * This method will return the greatest common divisor (GCD) of two given integers
+     * @param a first integer
+     * @param b second integer
+     * @return the greatest common divisor
      */
-    public static void main( String[] args ) 
-	{
-		Scanner scanner = new Scanner( System.in );													//create a scanner object to get user input
-		try																							//this try block is to catch the inevitable exception caused by the user quitting 
-		{
-			int t = scanner.nextInt();																//get number of test cases
+    public static int gcd( int a, int b )
+    {
+        if( a == 0 )
+            return b;
+        
+        return gcd(b%a, a);
+    }
 
-			while( t > 0 )																			//So long as there are more test cases
-			{		
-                int x = scanner.nextInt();                                                          //get the number to factor
-                
-                System.out.println( "Factors using printFactors method: " );
-                printFactors(x);
-                System.out.println();
-                
-                System.out.println( "Factors using printFactorsSorted method: " );
-                printFactorsSorted(x);
-                System.out.println();
-                
-                System.out.println( "Factors using factorsAsArray method then printed here: " );
-                ArrayList<Integer> arrayResult = factorsAsArray(x);
-                for( Integer i: arrayResult )                                                       //for each loop to print the factors in the array
-                    System.out.print( i + " " );                                                    //print the factor
-                System.out.println();
-                
-                System.out.println( "Factors using factorsAsTree method then printed here: " );
-                TreeSet<Integer> treeResult = factorsAsTree(x);
-                for( Integer i: treeResult )                                                        //for each loop to print the factors in the array
-                    System.out.print( i + " " );                                                    //print the factor
-                System.out.println();
-                
-    			t--;																				//get next test case
-			}
-		}
-		catch( Exception e )																		//catch an exception thrown by incorrect input
-		{
-			
-		}
-	}
-    
+    /**
+     * This method will determine if the given integer is a prime number.
+     * @param n the integer to check if it is prime or not
+     * @return true if n is prime, else false
+     */
+    public static boolean isPrime( int n )
+    {
+        if( n <= 1 )
+            return false;
+        
+        for( int i = 2; i <= Math.sqrt( n ); ++i )
+        {
+            if( n % i == 0 )
+                return false;
+        }
+        return true;
+    }
+        
+    /**
+     * This method will return the lowest common multiple (LCM) of the two given integers
+     * @param a first integer
+     * @param b second integer
+     * @return the lowest common multiple
+     */
+    public static int lcm( int a, int b )
+    {
+        //lcm can be found with the algorith:
+        //lcm(a,b) = ab/gcd(a,b)
+        int lcm = (a*b) / gcd( a, b );
+        return lcm;
+    }
+        
     /**
      * This method prints the factors of n space separated
      * @param n the integer to be factored
@@ -148,5 +147,13 @@ public class Factorization
         Collections.sort( result);        
         for( Integer i: result )                                                                    //for each loop to print the factors in the array
             System.out.print( i + " " );                                                            //print the factor
+    }
+    
+    /**
+     * Default constructor
+     */
+    public MathFunctions()
+    {
+        
     }
 }
