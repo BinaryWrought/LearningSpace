@@ -59,6 +59,30 @@ public class MathFunctions
     }
     
     /**
+     * This method will return all of the factors of a given number in a tree set with the largest factor at the root
+     * @param n the number to factor
+     * @return tree set of longs that are factors of n
+     */
+    public static TreeSet<Integer> factorsAsReverseTree( int n )
+    {
+        TreeSet<Integer> result = new TreeSet<>( Collections.reverseOrder() );                      //container for the result
+        double limit = Math.sqrt( n );                                                              //limit the algorithm for speed and efficiency
+        
+        for( int i = 1; i <= limit; ++i )                                                           //loop to find all of the factors
+        {
+            if( n % i == 0 )                                                                        //if the given number is divisible by i then this is a factor
+            {
+                result.add( i );                                                                    //add this factor to the result
+                
+                if ( i != ( n / i ) )                                                               //if n/i is not the same number as i then include it in the result
+                    result.add( n / i );                                                            //add this factor to the result
+            } 
+        }
+
+        return result;                                                                              //return the result
+    }
+    
+    /**
      * This method will return the greatest common divisor (GCD) of two given integers
      * @param a first integer
      * @param b second integer
@@ -150,10 +174,34 @@ public class MathFunctions
     }
     
     /**
+     * This method will sum the individual digits of the given integer
+     * @param n - the integer for which the digits need to be summed
+     * @return - the sum of all the digits of n
+     */
+    public static int sumDigits( int n )
+    {
+        int sum = 0;
+        while ( n > 0 )
+        {
+            sum += n%10;
+            n /= 10;
+        }
+        
+        return sum;
+    }
+    
+    /**
      * Default constructor
      */
     public MathFunctions()
     {
         
+    }
+    
+    public static void main( String[] args ) 
+	{
+        Scanner scanner = new Scanner( System.in );													//create a scanner object to get user input
+        int n = scanner.nextInt();																//get number of test cases
+        System.out.println( sumDigits(n));
     }
 }
