@@ -7,15 +7,11 @@ package com.jhazelle.gfg.easy;
 import java.util.*;
 
 /**
- * This is a solution to the <a href="https://practice.geeksforgeeks.org/problems/ishaans-birthday/0" target="_blank">GeeksForGeeks Easy Ishaan's Birthday</a>
+ * This is a solution to the <a href="https://practice.geeksforgeeks.org/problems/searching-in-an-array-where-adjacent-differ-by-at-most-k/0" target="_blank">GeeksForGeeks Easy Searching in an array where adjacent differ by at most k</a>
  * 
  * To summarize the challenge:
- * Given an array of integers that represents quantities of letters ( index 0 = A, index 1 = B and so on ) determine what is the cheapest exchange for all letters to one other letter.
- * An exchange is the difference in value between two letters. 
- * 
- * For example, if I have 4 A's and 2 C's then the to exchange A for C would be: 4 * ( 3 - 1 ) = 8. 
- * If instead I exchange C for A the difference would be 2 * ( 3 - 1 ) = 4.
- * So in this example exchanging C for A would be cheaper. 
+ * Given an array find the first occurrence of X.
+ * The actual problem statement is a lot more complicated but this really is all they wanted.
  * 
  * @author <a href="mailto:jhazelle@asu.edu">Justin Hazelle</a>
  * <a href="https://github.com/BinaryWrought" target="_blank">GitHub</a>
