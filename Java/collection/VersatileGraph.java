@@ -20,10 +20,11 @@ import java.util.*;
  */
 public class VersatileGraph<E, W> 
 {
+    private boolean directed = true;
     private int initialCapacity = 16;    
     private float loadFactor = 0.75f;
     private final HashMap< E, HashMap< E, W > > nodes;
-    
+        
     /**
      * Default constructor uses default initial capacity and load factor
      */
@@ -33,11 +34,33 @@ public class VersatileGraph<E, W>
     }
     
     /**
+     * Default constructor uses default initial capacity and load factor
+     * @param d indicate if this graph is directed (true) or undirected (false)
+     */
+    VersatileGraph( boolean d )
+    {
+        directed = d;
+        nodes = new HashMap<>( initialCapacity, loadFactor );
+    }
+    
+    /**
      * Constructor where the user supplies the initial capacity but load factor uses the default
      * @param ic the initial capacity of the graph
      */
     VersatileGraph( int ic )
     {
+        initialCapacity = ic;
+        nodes = new HashMap<>( ic, loadFactor );
+    }
+    
+    /**
+     * Constructor where the user supplies the initial capacity but load factor uses the default
+     * @param d indicate if this graph is directed (true) or undirected (false)
+     * @param ic the initial capacity of the graph
+     */
+    VersatileGraph( boolean d, int ic )
+    {
+        directed = d;
         initialCapacity = ic;
         nodes = new HashMap<>( ic, loadFactor );
     }
@@ -55,8 +78,21 @@ public class VersatileGraph<E, W>
     }
     
     /**
+     * Constructor where the user specifies both the initial capacity and the load factor
+     * @param d indicate if this graph is directed (true) or undirected (false)
+     * @param ic the initial capacity of the graph
+     * @param lf the load factor for the graph
+     */
+    VersatileGraph( boolean d, int ic, float lf )
+    {
+        directed = d;
+        loadFactor = lf;
+        initialCapacity = ic;
+        nodes = new HashMap<>( ic, lf );
+    }
+    
+    /**
      * Method to add edges between nodes.
-     * TODO: allow for this to be undirected (currently it is only directed)
      * @param src the source node of the edge
      * @param dest the destination node of the edge
      * @param wt the weight for this edge
@@ -69,6 +105,8 @@ public class VersatileGraph<E, W>
             nodes.put( dest, new HashMap<>( initialCapacity, loadFactor ) );
 
         nodes.get( src ).put(dest, wt);
+        if( !directed )
+            nodes.get( dest ).put( src, wt );
     }
 
     /**
@@ -160,31 +198,24 @@ public class VersatileGraph<E, W>
     {
         if( !nodes.containsKey( vertex ) )
             return new ArrayList<>(0);
-        else return new ArrayList<>( nodes.get( vertex ).keySet() );
-        
+        else return new ArrayList<>( nodes.get( vertex ).keySet() );        
     }
-
+    
     /**
      * Method to print each node on its own line with its edges, and their weights
-     * TODO: get a string instead
      */
-    public void printGraph()
+    public String getGraphAsString()
     {
+        String result = "";
         for( Map.Entry< E, HashMap< E, W > > m : nodes.entrySet() )
         {
-            System.out.print( m.getKey() + ": " );
+            result += m.getKey() + ": ";
             for( Map.Entry< E, W > n : m.getValue().entrySet() )
             {
-                System.out.print( n.getKey() + "(" + n.getValue() + ") " );
+                result += n.getKey() + "(" + n.getValue() + ") ";
             }
-                //below is functionally the same as the above for loop
-//            m.getValue().entrySet().forEach( ( n ) ->
-//            {
-//                System.out.print( n.getKey() + "(" + n.getValue() + ") " );
-//            } );
-
-            System.out.println();
         }
+        return result;
     }
     
     /**
@@ -195,6 +226,8 @@ public class VersatileGraph<E, W>
     public void removeEdge( E src, E dest )
     {
         nodes.get( src ).remove( dest );
+        if( !directed )
+            nodes.get( dest ).remove( src );
     }
     
     /**
@@ -203,6 +236,9 @@ public class VersatileGraph<E, W>
      */
     public void removeNode( E src )
     {
+        for( Map.Entry< E, HashMap< E, W > > m : nodes.entrySet() )
+            m.getValue().remove( src );
+
         nodes.remove( src );
     }
     
