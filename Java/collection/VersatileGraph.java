@@ -120,11 +120,17 @@ public class VersatileGraph<E, W>
     }
     
     /**
-     * Method to demonstrate breadth first search through the graph
+     * Method to demonstrate breadth first traversal through the graph
      * @param start the node to start the traversal from
+     * @return A string that is the result of the bread first traversal
      */
-    public void breadthFirstTraversal( E start )
+    public String breadthFirstTraversal( E start )
     {
+        if( !nodes.containsKey( start ) )   //the specified node doesn't exist
+            return "The given start node does not exist in the graph.";
+
+        String result = "";
+                
         //all vertices start as "not visited"
         HashSet<E> visited = new HashSet<>( size() );
         Queue<E> queue = new LinkedList<>();
@@ -137,21 +143,20 @@ public class VersatileGraph<E, W>
         {
             //dequeue a vertex and print it
             start = queue.poll();
-            System.out.print( start.toString() + " " );
+            result += start.toString() + " ";
             
             //Get adjacent vertices of dequeued vertex
             //if adjacent has not been visited then mark it as visited
-            List<E> n = neighbors( start );
-            for( E i : n )
+            for( E e : nodes.get( start ).keySet() )
             {
-                E next = i;
-                if( !visited.contains( next ) )
+                if( !visited.contains( e ) )
                 {
-                    visited.add( next );
-                    queue.add( next );
+                    visited.add( e );
+                    queue.add( e );
                 }
             }
         }
+        return result;
     }
     
     /**
@@ -167,13 +172,92 @@ public class VersatileGraph<E, W>
     }
     
     /**
-     * Method to start a depth first traversal algorithm
-     * @param start the at which to start the depth first traversal
+     * Method to illustrate a depth first traversal algorithm
+     * @param start the node at which to start the depth first traversal
      */
-    public void depthFirstTraversal( E start )
+    public String depthFirstTraversal( E start )
     {
+        if( !nodes.containsKey( start ) )
+            return "Given node not found in graph.";
+
         HashSet<E> marked = new HashSet<>( size() );
-        depthFirstPrint( start, marked );
+        return depthFirstTraversal( start, marked );
+    }
+    
+    /**
+     * This method gets the shortest path to every node from the specified start node.
+     * @param start the node from which the pathing should start
+     */
+    public void dijkstraPath( E start, HashMap< E, E > parents, HashMap< E, Integer > distances )
+    { 
+        int initCap = (int)( size() / loadFactor ) + 1;
+        
+        // added.contains(e) will be true if 
+        // vertex e is included / in shortest path tree
+        // or shortest distance from src to e is finalized
+        HashSet< E > added = new HashSet<>( initCap );
+ 
+        // Initialize all distances as INFINITE
+        for( E e: nodes.keySet() )
+            distances.put( e, Integer.MAX_VALUE );
+         
+        // Distance of source vertex from itself is always 0
+        distances.put( start, 0 ); 
+        // The starting vertex does not have a parent
+        parents.put( start, null );
+ 
+        // Find shortest path for all vertices
+        for (int i = 1; i < size(); i++)
+        {
+            // Pick the minimum distance vertex from the set of vertices not yet processed. 
+            // nearestVertex is always equal to startNode in first iteration.
+            E nearestVertex = null;
+            int shortestDistance = Integer.MAX_VALUE;
+            for( E e: nodes.keySet() )
+            {
+                if ( !added.contains( e ) && distances.get( e ) < shortestDistance ) 
+                {
+                    nearestVertex = e;
+                    shortestDistance = distances.get( e );
+                }
+            }
+ 
+            // Mark the picked vertex as processed
+            added.add( nearestVertex );
+ 
+            // Update dist value of the adjacent vertices of the picked vertex.
+            for( E e: nodes.keySet() ) 
+            {
+                if( isEdge( nearestVertex, e ) )
+                {
+                    int edgeDistance = (Integer)nodes.get( nearestVertex ).get( e );
+
+                    if (edgeDistance > 0 && ((shortestDistance + edgeDistance) < distances.get( e ) ) ) 
+                    {
+                        parents.put( e, nearestVertex );
+                        distances.put( e, shortestDistance + edgeDistance );
+                    }
+                }
+            }
+        }       
+    }
+            
+    /**
+     * Method to get a string representation of each node on its own line with its edges, and their weights
+     * @return the string representation of the graph
+     */
+    public String getGraphAsString()
+    {
+        String result = "";
+        for( Map.Entry< E, HashMap< E, W > > m : nodes.entrySet() )
+        {
+            result += m.getKey() + ": ";
+            for( Map.Entry< E, W > n : m.getValue().entrySet() )
+            {
+                result += n.getKey() + "(" + n.getValue() + ") ";
+            }
+        }
+        return result;
     }
     
     /**
@@ -190,32 +274,77 @@ public class VersatileGraph<E, W>
     }
     
     /**
-     * Method to get a list of all the edges connected to the specified node
-     * @param vertex
-     * @return 
+     * Method to determine if a path exists from some source node to some destination node.
+     * This uses breadth-first to traverse the graph
+     * @param src the node to start the traversal from
+     * @param dest the desired end node of the path
+     * @return true when a path between the specified nodes exists, otherwise false
      */
-    public List<E> neighbors( E vertex )
+    public boolean pathExists( E src, E dest )
     {
-        if( !nodes.containsKey( vertex ) )
-            return new ArrayList<>(0);
-        else return new ArrayList<>( nodes.get( vertex ).keySet() );        
+        if( src.equals( dest ) )                                            //source and destination are the same so the path exists - trivial case
+            return true;
+        
+        if( !nodes.containsKey( src ) || !nodes.containsKey( dest ) )       //either node doesn't even exist
+            return false;
+        
+        //all vertices start as "not visited"
+        HashSet<E> visited = new HashSet<>( size() );
+        Queue<E> queue = new LinkedList<>();
+        
+        //Mark the current node as visited and queue it
+        visited.add( src );
+        queue.add( src );
+        
+        while( !queue.isEmpty() )
+        {
+            //dequeue a vertex and print it
+            E node = queue.poll();
+            if( node.equals( dest ) )   //proved a path exists
+                return true;
+            
+            //Get adjacent vertices of dequeued vertex
+            //if adjacent has not been visited then mark it as visited
+            for( E e : nodes.get( node ).keySet() )
+            {
+                if( !visited.contains( e ) )
+                {
+                    visited.add( e );
+                    queue.add( e );
+                }
+            }
+        }
+        //if we made it here without finding the destination edge, then the path does not exist
+        return false;
     }
     
     /**
-     * Method to print each node on its own line with its edges, and their weights
+     * Recursive method to print the path to the node specified
+     * @param cNode the node to which the path is sought
+     * @param parents a map of the shortest path parents to each node
      */
-    public String getGraphAsString()
+    public void printPath( E cNode, HashMap< E, E > parents )
     {
-        String result = "";
-        for( Map.Entry< E, HashMap< E, W > > m : nodes.entrySet() )
-        {
-            result += m.getKey() + ": ";
-            for( Map.Entry< E, W > n : m.getValue().entrySet() )
-            {
-                result += n.getKey() + "(" + n.getValue() + ") ";
-            }
-        }
-        return result;
+        if( parents.get( cNode ) == null )
+            return;
+        printPath( parents.get( cNode ), parents );
+        System.out.print( cNode.toString() + " " );
+    }
+    
+    /**
+     * Recursive method to print the path to the node specified
+     * @param cNode the node to which the path is sought
+     * @param parents a map of the shortest path parents to each node
+     * @return a string representing the path
+     */
+    public String getPathString( E cNode, HashMap< E, E > parents )
+    {
+        StringBuilder sb = new StringBuilder("");
+        sb.append( cNode + " " );
+        if( parents.get( cNode ) != null )
+            sb.insert( 0, getPathString( parents.get( cNode ), parents ) );
+
+        return sb.toString();        
     }
     
     /**
@@ -241,7 +370,7 @@ public class VersatileGraph<E, W>
 
         nodes.remove( src );
     }
-    
+        
     /**
      * Method to get the total number of nodes currently in the graph.
      * @return the number of nodes in the graph
@@ -252,21 +381,24 @@ public class VersatileGraph<E, W>
     }
     
     /**
-     * Method to print the contents of the graph using a recursive depth first algorithm.
+     * Recursive method to demonstrate a depth first algorithm.
      * @param v the node being visited on this recursive call
      * @param marked a set of nodes that has already been visited
+     * @return a string representing the node at the current depth in this recursive call
      */
-    private void depthFirstPrint( E v, HashSet<E> marked )
+    private String depthFirstTraversal( E v, HashSet<E> marked )
     {
-        List<E> connections = neighbors( v );
+        StringBuilder sb = new StringBuilder("");
+        
         marked.add( v );
-        System.out.print( v.toString() + " " );
+        sb.append( v.toString() + " " );
         
         //Traverse all the neighbors looking for unmarked vertices
-        for( E next: connections )
+        for( E next: nodes.get( v ).keySet() )
         {
             if( !marked.contains( next ) )
-                depthFirstPrint( next, marked );
+                sb.append( depthFirstTraversal( next, marked ) );
         }
-    }    
+        return sb.toString();
+    }
 }
